@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GostECC
+namespace EllipticMath
 {
     class DSGost
     {
@@ -12,7 +12,7 @@ namespace GostECC
         private BigInteger b = new BigInteger();
         private BigInteger n = new BigInteger();
         private byte[] xG;
-        private ECPoint G = new ECPoint();
+        private EllipticCurvePoint G = new EllipticCurvePoint();
         
         public DSGost(BigInteger p, BigInteger a, BigInteger b, BigInteger n, byte[] xG)
         {
@@ -35,15 +35,15 @@ namespace GostECC
         }
 
         //С помощью секретного ключа d вычисляем точку Q=d*G, это и будет наш публичный ключ
-        public ECPoint GenPublicKey(BigInteger d)
+        public EllipticCurvePoint GenPublicKey(BigInteger d)
         {
-            ECPoint G=GDecompression();
-            ECPoint Q = ECPoint.multiply(d, G);
+            EllipticCurvePoint G=GDecompression();
+            EllipticCurvePoint Q = EllipticCurvePoint.multiply(d, G);
             return Q;
         }
 
         //Восстанавливаем координату y из координаты x и бита четности y 
-        private ECPoint GDecompression()
+        private EllipticCurvePoint GDecompression()
         {
             byte y = xG[0];
             byte[] x=new byte[xG.Length-1];
@@ -56,7 +56,7 @@ namespace GostECC
                 Ycord = beta;
             else
                 Ycord = p - beta;
-            ECPoint G = new ECPoint();
+            EllipticCurvePoint G = new EllipticCurvePoint();
             G.a = a;
             G.b = b;
             G.FieldChar = p;
@@ -111,7 +111,7 @@ namespace GostECC
             if (e == 0)
                 e = 1;
             BigInteger k = new BigInteger();
-            ECPoint C=new ECPoint();
+            EllipticCurvePoint C=new EllipticCurvePoint();
             BigInteger r=new BigInteger();
             BigInteger s = new BigInteger();
             do
@@ -120,7 +120,7 @@ namespace GostECC
                 {
                     k.genRandomBits(n.bitCount(), new Random());
                 } while ((k < 0) || (k > n));
-                C = ECPoint.multiply(k, G);
+                C = EllipticCurvePoint.multiply(k, G);
                 r = C.x % n;
                 s = ((r * d) + (k * e)) % n;
             } while ((r == 0)||(s==0));
@@ -130,7 +130,7 @@ namespace GostECC
         }
 
         //проверяем подпись 
-        public bool SingVer(byte[] H, string sing, ECPoint Q)
+        public bool SingVer(byte[] H, string sing, EllipticCurvePoint Q)
         {
             string Rvector = sing.Substring(0, n.bitCount() / 4);
             string Svector = sing.Substring(n.bitCount() / 4, n.bitCount() / 4);
@@ -146,9 +146,9 @@ namespace GostECC
             BigInteger z1 = (s * v) % n;
             BigInteger z2 = n + ((-(r * v)) % n);
             this.G = GDecompression();
-            ECPoint A = ECPoint.multiply(z1, G);
-            ECPoint B = ECPoint.multiply(z2, Q);
-            ECPoint C = A + B;
+            EllipticCurvePoint A = EllipticCurvePoint.multiply(z1, G);
+            EllipticCurvePoint B = EllipticCurvePoint.multiply(z2, Q);
+            EllipticCurvePoint C = A + B;
             BigInteger R = C.x % n;
             if (R == r)
                 return true;

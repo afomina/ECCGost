@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace GostECC
+namespace EllipticMath
 {
     public partial class Form1 : Form
     {
@@ -26,13 +26,13 @@ namespace GostECC
             BigInteger a = new BigInteger(7);
             BigInteger b = new BigInteger("1518655069210828534508950034714043154928747527740206436194018823352809982443793732829756914785974674866041605397883677596626326413990136959047435811826396", 10);
             BigInteger k = new BigInteger("175516356025850499540628279921125280333451031747737791650208144243182057075034446102986750962508909227235866126872473516807810541747529710309879958632945", 10);
-            ECPoint P1 = new ECPoint();
+            EllipticCurvePoint P1 = new EllipticCurvePoint();
             P1.a = a;
             P1.b = b;
             P1.FieldChar = p;
             P1.x = x;
             P1.y = y;
-            ECPoint P3 = ECPoint.multiply(k, P1);
+            EllipticCurvePoint P3 = EllipticCurvePoint.multiply(k, P1);
             BigInteger r = P3.x % p;
             /////// DS forming
             BigInteger q = new BigInteger("3623986102229003635907788753683874306021320925534678605086546150450856166623969164898305032863068499961404079437936585455865192212970734808812618120619743", 10);
@@ -45,19 +45,19 @@ namespace GostECC
             BigInteger z2 = q + ((-(r * v)) % q);
             BigInteger x1 = new BigInteger("909546853002536596556690768669830310006929272546556281596372965370312498563182320436892870052842808608262832456858223580713780290717986855863433431150561", 10);
             BigInteger y1 = new BigInteger(" 2921457203374425620632449734248415455640700823559488705164895837509539134297327397380287741428246088626609329139441895016863758984106326600572476822372076", 10);
-            ECPoint Q = new ECPoint();
+            EllipticCurvePoint Q = new EllipticCurvePoint();
             Q.a = a;
             Q.b = b;
             Q.x = x1;
             Q.y = y1;
             Q.FieldChar = p;
-            ECPoint A = ECPoint.multiply(z, P1);
-            ECPoint B = ECPoint.multiply(z2, Q);
-            ECPoint C = A + B;
+            EllipticCurvePoint A = EllipticCurvePoint.multiply(z, P1);
+            EllipticCurvePoint B = EllipticCurvePoint.multiply(z2, Q);
+            EllipticCurvePoint C = A + B;
             BigInteger R = C.x % q;
         }
 
-        private ECPoint Q = new ECPoint();
+        private EllipticCurvePoint Q = new EllipticCurvePoint();
         private BigInteger d = new BigInteger();
         
         private void button2_Click(object sender, EventArgs e)

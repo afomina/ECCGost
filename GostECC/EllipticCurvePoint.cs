@@ -3,19 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GostECC
-{
-    //класс для умножения точек эллиптической кривой
-    public class ECPoint
-    {
+namespace EllipticMath {
+
+    public class EllipticCurvePoint {
         public BigInteger x;
         public BigInteger y;
         public BigInteger a;
         public BigInteger b;
         public BigInteger FieldChar;
 
-        public ECPoint(ECPoint p)
-        {
+        public EllipticCurvePoint(EllipticCurvePoint p) {
             x = p.x;
             y = p.y;
             a = p.a;
@@ -23,18 +20,24 @@ namespace GostECC
             FieldChar = p.FieldChar;
         }
 
-        public ECPoint()
-        {
+        public EllipticCurvePoint() {
             x = new BigInteger();
             y = new BigInteger();
             a = new BigInteger();
             b = new BigInteger();
             FieldChar = new BigInteger();
         }
-        //сложение двух точек P1 и P2
-        public static ECPoint operator +(ECPoint p1, ECPoint p2)
-        {
-            ECPoint p3 = new ECPoint();
+
+        public EllipticCurvePoint(BigInteger x, BigInteger y, BigInteger a, BigInteger b, BigInteger f) {
+            this.x = x;
+            this.y = y;
+            this.a = a;
+            this.b = b;
+            this.FieldChar = f;
+        }
+
+        public static EllipticCurvePoint operator +(EllipticCurvePoint p1, EllipticCurvePoint p2) {
+            EllipticCurvePoint p3 = new EllipticCurvePoint();
             p3.a = p1.a;
             p3.b = p1.b;
             p3.FieldChar = p1.FieldChar;
@@ -58,10 +61,13 @@ namespace GostECC
                 p3.y += p1.FieldChar;
             return p3;
         }
-        //сложение точки P c собой же
-        public static ECPoint Double(ECPoint p)
-        {
-            ECPoint p2 = new ECPoint();
+
+        public static EllipticCurvePoint operator -(EllipticCurvePoint p1, EllipticCurvePoint p2) {
+            return p1 + new EllipticCurvePoint(p2.x, -p2.y, p2.a, p2.b, p2.FieldChar);
+        }
+        
+        public static EllipticCurvePoint Double(EllipticCurvePoint p) {
+            EllipticCurvePoint p2 = new EllipticCurvePoint();
             p2.a = p.a;
             p2.b = p.b;
             p2.FieldChar = p.FieldChar;
@@ -84,10 +90,9 @@ namespace GostECC
 
             return p2;
         }
-        //умножение точки на число x, по сути своей представляет x сложений точки самой с собой
-        public static ECPoint multiply(BigInteger x, ECPoint p)
-        {
-            ECPoint temp = p;
+        
+        public static EllipticCurvePoint multiply(BigInteger x, EllipticCurvePoint p) {
+            EllipticCurvePoint temp = p;
             x = x - 1;
             while (x != 0)
             {
@@ -104,6 +109,11 @@ namespace GostECC
                 p = Double(p);
             }
             return temp;
+        }
+
+
+        internal string toString() {
+            return "(" + x + ", " + y + ")";
         }
     }
 }

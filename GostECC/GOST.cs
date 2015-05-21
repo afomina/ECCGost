@@ -5,7 +5,7 @@ using System.Text;
 using System.Collections;
 
 
-namespace GostECC
+namespace EllipticMath
 {
     class GOST
     {

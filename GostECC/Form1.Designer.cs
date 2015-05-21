@@ -1,4 +1,4 @@
-﻿namespace GostECC
+﻿namespace EllipticMath
 {
     partial class Form1
     {
