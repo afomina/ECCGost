@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace EllipticMath {
 
@@ -28,7 +29,14 @@ namespace EllipticMath {
             FieldChar = new BigInteger();
         }
 
-        public EllipticCurvePoint(BigInteger x, BigInteger y, BigInteger a, BigInteger b, BigInteger f) {
+        public bool check()
+        {
+            BigInteger y1 = (y * y) % FieldChar;
+            BigInteger y2 = (x * x * x + a * x + b) % FieldChar;
+            return y1 == y2;
+        }
+
+        public EllipticCurvePoint(BigInteger x, BigInteger y, BigInteger a, BigInteger b, BigInteger f) {            
             this.x = x;
             this.y = y;
             this.a = a;

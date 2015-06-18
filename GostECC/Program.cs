@@ -12,7 +12,6 @@ namespace EllipticMath {
 
         [STAThread]
         static void Main() {
-
             string option = parseInput();
             EllipticCurvePoint result = null;
             switch (option)
@@ -29,7 +28,13 @@ namespace EllipticMath {
             }
 
             StreamWriter writer = new StreamWriter("result.txt");
-            writer.WriteLine(result.toString());
+            if (point1.check() && point2.check()) {            
+                 writer.WriteLine(result.toString());
+            }
+            else {
+                if (!point1.check()) { writer.WriteLine("Точка 1 не принадлежит эллиптической кривой"); }
+                if (!point2.check()) { writer.WriteLine("Точка 2 не принадлежит эллиптической кривой"); }
+            }
             writer.Close();
         }
 
